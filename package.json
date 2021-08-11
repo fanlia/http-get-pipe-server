@@ -1,0 +1,23 @@
+{
+  "name": "http-get-pipe-server",
+  "version": "1.0.0",
+  "description": "simple http.get pipe server",
+  "main": "pipe-server.js",
+  "scripts": {
+    "start": "node-dev pipe-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanlia/http-get-pipe-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fanlia/http-get-pipe-server/issues"
+  },
+  "homepage": "https://github.com/fanlia/http-get-pipe-server#readme",
+  "devDependencies": {
+    "node-dev": "^7.0.0"
+  }
+}
