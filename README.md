@@ -8,6 +8,7 @@ simple http.get pipe server
 npm start
 
 curl http://localhost:3129/p?url=http://httpbin.org/ip
+curl -X POST "http://localhost:3129/p?url=http://httpbin.org/post" -d '{"hello":"world"}'
 
 ```
 
