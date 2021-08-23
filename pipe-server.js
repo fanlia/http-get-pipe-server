@@ -13,7 +13,7 @@ const handler = (req, res) => {
     if (pathname === '/p') {
         const options = querystring.parse(query)
         if (!options.url) {
-            res.writeHead(403, { 'Content-Type': 'text/plain' });
+            res.writeHead(400, { 'Content-Type': 'text/plain' });
             res.end(`url required`);
             return
         }
@@ -26,14 +26,24 @@ const handler = (req, res) => {
             host,
         }
 
-        if (req.headers['user-agent']) {
-            headers['user-agent'] = req.headers['user-agent']
+        const method = options.method || req.method
+
+        const req_headers = [
+            'user-agent',
+            'content-type',
+        ]
+
+        for (const h of req_headers) {
+            if (req.headers[h]) {
+                headers[h] = req.headers[h]
+            }
         }
 
         const agent = options.url.startsWith('https') ? https : http
 
-        agent.get(options.url, {
+        const url_req = agent.request(options.url, {
             headers,
+            method,
         }, (url_res) => {
             for (const key in url_res.headers) {
                 res.setHeader(key, url_res.headers[key])
@@ -41,9 +51,17 @@ const handler = (req, res) => {
             res.setHeader('access-control-allow-origin', '*')
             url_res.pipe(res)
         })
+
+        url_req.on('error', e => {
+            res.writeHead(500, { 'Content-Type': 'text/plain' });
+            res.end(`Cannot ${method} ${options.url}, ${e.message}`);
+        })
+
+        req.pipe(url_req)
+
     } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
-        res.end(`Cannot GET ${pathname}`);
+        res.end(`Cannot ${req.method} ${pathname}`);
     }
 }
 
